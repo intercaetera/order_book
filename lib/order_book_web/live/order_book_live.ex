@@ -1,45 +1,39 @@
 defmodule OrderBookWeb.OrderBookLive do
   use Phoenix.LiveView
 
+  import OrderBookWeb.OrderList
+
   def render(assigns) do
     ~H"""
     <div class="bg-black text-white w-screen h-screen flex flex-col justify-center items-center">
-      <h1 class="text-4xl"><%= @book.name %> $<%= @book.ticker %></h1>
+      <h1 class="text-4xl"><%= @name %> - $<%= @book.ticker %></h1>
 
       <div class="flex p-2">
-        <div class="bg-green-900 p-2">
-          Asks
-          <ul>
-            <li :for={{price, volume} <- format_orders(@book.asks)}>
-              <%= volume %> for $<%= price %>
-            </li>
-          </ul>
-        </div>
-
-        <div class="bg-red-900 p-2">
-          Bids
-          <ul>
-            <li :for={{price, volume} <- format_orders(@book.bids)}>
-              <%= volume %> for $<%= price %>
-            </li>
-          </ul>
-        </div>
+        <.order_list type="Asks" color="green" orders={@book.asks} />
+        <.order_list type="Bids" color="red" orders={@book.bids} />
       </div>
     </div>
     """
   end
 
   def mount(%{"name" => name}, _session, socket) do
+    if connected?(socket), do: OrderBook.subscribe(name)
+
     socket =
       socket
-      |> assign(:book, OrderBook.find_or_create_book(name))
+      |> assign(:name, name)
+      |> assign_book(name)
 
     {:ok, socket}
   end
 
-  def format_orders(orders) do
-    orders
-    |> Enum.frequencies()
-    |> Enum.take(5)
+  def handle_info(:update, socket) do
+    socket =
+      socket
+      |> assign_book(socket.assigns.name)
+
+    {:noreply, socket}
   end
+
+  defp assign_book(socket, name), do: assign(socket, :book, OrderBook.find_or_create_book(name))
 end

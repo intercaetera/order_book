@@ -6,10 +6,23 @@ defmodule OrderBook do
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
   """
+  @topic "book:"
+
   alias OrderBook.BookServer
 
-  defdelegate ask(name, volume, price), to: BookServer
-  defdelegate bid(name, volume, price), to: BookServer
+  def subscribe(name) do
+    Phoenix.PubSub.subscribe(OrderBook.PubSub, @topic <> name)
+  end
+
+  def ask(name, volume, price) do
+    BookServer.ask(name, volume, price)
+    Phoenix.PubSub.broadcast(OrderBook.PubSub, @topic <> name, :update)
+  end
+
+  def bid(name, volume, price) do
+    BookServer.bid(name, volume, price)
+    Phoenix.PubSub.broadcast(OrderBook.PubSub, @topic <> name, :update)
+  end
 
   def find_or_create_book(name) do
     case Registry.lookup(Registry.BookRegistry, name) do
