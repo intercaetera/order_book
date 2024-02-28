@@ -3,21 +3,27 @@ defmodule OrderBook.BookServer do
 
   alias OrderBook.Engine
 
-  def bid(pid, volume, price) do
-    GenServer.cast(pid, {:bid, volume, price})
+  def start_link(name) do
+    book = Engine.new_book(name)
+    GenServer.start_link(__MODULE__, book, name: via(name))
   end
 
-  def ask(pid, volume, price) do
-    GenServer.cast(pid, {:ask, volume, price})
+  def bid(name, volume, price) do
+    GenServer.cast(via(name), {:bid, volume, price})
   end
 
-  def status(pid) do
-    GenServer.call(pid, :status)
+  def ask(name, volume, price) do
+    GenServer.cast(via(name), {:ask, volume, price})
   end
+
+  def status(name) do
+    GenServer.call(via(name), :status)
+  end
+
+  defp via(name), do: {:via, Registry, {Registry.BookRegistry, name}}
 
   @impl true
-  def init(name) do
-    initial_state = Engine.new_book(name)
+  def init(initial_state) do
     {:ok, initial_state}
   end
 

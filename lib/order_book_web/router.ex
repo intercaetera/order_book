@@ -18,6 +18,7 @@ defmodule OrderBookWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/:name", OrderBookLive
   end
 
   # Other scopes may use custom stacks.

@@ -1,18 +1,18 @@
 defmodule OrderBook.Engine do
   @type book :: %{
-          name: atom(),
+          name: String.t(),
           bids: list(number()),
           asks: list(number()),
           ticker: number()
         }
 
-  @spec new_book(atom()) :: book()
+  @spec new_book(String.t()) :: book()
   def new_book(name) do
     %{name: name, bids: [], asks: [], ticker: 0}
   end
 
   @spec clear(book()) :: book()
-  def clear(%{asks: asks, bids: bids} = book) when hd(bids) > hd(asks) do
+  def clear(%{asks: asks, bids: bids} = book) when hd(bids) >= hd(asks) do
     [ticker | new_asks] = asks
     [_ | new_bids] = bids
     clear(%{book | asks: new_asks, bids: new_bids, ticker: ticker})
