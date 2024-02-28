@@ -6,8 +6,8 @@ defmodule OrderBook.Engine do
           ticker: number()
         }
 
-  @spec new(atom()) :: book()
-  def new(name) do
+  @spec new_book(atom()) :: book()
+  def new_book(name) do
     %{name: name, bids: [], asks: [], ticker: 0}
   end
 
@@ -25,7 +25,7 @@ defmodule OrderBook.Engine do
     new_bids =
       List.duplicate(price, volume)
       |> Kernel.++(bids)
-      |> Enum.sort(:asc)
+      |> Enum.sort(:desc)
 
     Map.put(book, :bids, new_bids) |> clear()
   end
