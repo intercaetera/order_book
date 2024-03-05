@@ -7,7 +7,7 @@ defmodule OrderBookWeb.OrderList do
 
   def order_list(assigns) do
     ~H"""
-    <div class={"bg-#{@color}-900 p-2"}>
+    <div class="p-2" style={"background: #{@color};"}>
       <strong><%= String.capitalize(@type) %></strong>
       <ul>
         <li :for={{price, volume} <- format_orders(@orders)}>

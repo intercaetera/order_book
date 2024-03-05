@@ -9,8 +9,8 @@ defmodule OrderBookWeb.OrderBookLive do
       <h1 class="text-4xl"><%= @name %> - $<%= @book.ticker %></h1>
 
       <div class="flex p-2">
-        <.order_list type="Asks" color="green" orders={@book.asks} />
-        <.order_list type="Bids" color="red" orders={@book.bids} />
+        <.order_list type="Asks" color="darkgreen" orders={@book.asks} />
+        <.order_list type="Bids" color="darkred" orders={@book.bids} />
       </div>
     </div>
     """
