@@ -18,14 +18,16 @@ defmodule OrderBook do
 
   def ask(name, volume, price) do
     BookServer.ask(name, volume, price)
-    Phoenix.PubSub.broadcast(OrderBook.PubSub, @topic <> name, :update)
     TradeLog.create_log(name, :ask, volume, price)
+    Phoenix.PubSub.broadcast(OrderBook.PubSub, @topic <> name, :update)
+    :ok
   end
 
   def bid(name, volume, price) do
     BookServer.bid(name, volume, price)
-    Phoenix.PubSub.broadcast(OrderBook.PubSub, @topic <> name, :update)
     TradeLog.create_log(name, :bid, volume, price)
+    Phoenix.PubSub.broadcast(OrderBook.PubSub, @topic <> name, :update)
+    :ok
   end
 
   def find_or_create_book(name) do
