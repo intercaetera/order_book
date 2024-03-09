@@ -1,0 +1,20 @@
+<div class="w-full h-screen bg-black text-white">
+  <table class="border-collapse border-white">
+    <thead>
+      <tr>
+        <th>Name (symbol)</th>
+        <th>Order type</th>
+        <th>Volume</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr :for={log <- @logs}>
+        <td class="border p-1"><%= log.name %></td>
+        <td class="border p-1" style={"background: #{if log.type == :bid, do: "darkred", else: "darkgreen"}"}><%= inspect log.type %></td>
+        <td class="border p-1 text-right"><%= log.volume %></td>
+        <td class="border p-1 text-right"><%= log.price %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

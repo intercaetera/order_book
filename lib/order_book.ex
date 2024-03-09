@@ -8,7 +8,9 @@ defmodule OrderBook do
   """
   @topic "book:"
 
-  alias OrderBook.BookServer
+  alias OrderBook.{BookServer, TradeLog}
+
+  defdelegate get_all_logs(), to: TradeLog
 
   def subscribe(name) do
     Phoenix.PubSub.subscribe(OrderBook.PubSub, @topic <> name)
@@ -17,11 +19,13 @@ defmodule OrderBook do
   def ask(name, volume, price) do
     BookServer.ask(name, volume, price)
     Phoenix.PubSub.broadcast(OrderBook.PubSub, @topic <> name, :update)
+    TradeLog.create_log(name, :ask, volume, price)
   end
 
   def bid(name, volume, price) do
     BookServer.bid(name, volume, price)
     Phoenix.PubSub.broadcast(OrderBook.PubSub, @topic <> name, :update)
+    TradeLog.create_log(name, :bid, volume, price)
   end
 
   def find_or_create_book(name) do

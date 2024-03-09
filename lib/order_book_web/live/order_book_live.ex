@@ -63,6 +63,8 @@ defmodule OrderBookWeb.OrderBookLive do
     %{bid: true, volume: String.to_integer(volume), price: String.to_integer(price)}
   end
 
+  defp cast(_), do: %{}
+
   defp bid_or_ask(%{ask: true, volume: volume, price: price}, name)
        when volume > 0 and price > 0 do
     OrderBook.ask(name, volume, price)
@@ -73,5 +75,5 @@ defmodule OrderBookWeb.OrderBookLive do
     OrderBook.bid(name, volume, price)
   end
 
-  defp bid_or_ask(_, _), do: nil
+  defp bid_or_ask(_, _), do: :ok
 end
