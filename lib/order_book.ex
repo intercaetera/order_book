@@ -31,8 +31,8 @@ defmodule OrderBook do
   end
 
   def find_or_create_book(name) do
-    case Registry.lookup(Registry.BookRegistry, name) do
-      [] ->
+    case (name |> String.to_atom() |> Process.whereis()) do
+      nil ->
         BookServer.start_link(name)
         BookServer.status(name)
 

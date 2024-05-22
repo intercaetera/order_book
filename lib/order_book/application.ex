@@ -16,8 +16,6 @@ defmodule OrderBook.Application do
       {Phoenix.PubSub, name: OrderBook.PubSub},
       # Start the Endpoint (http/https)
       OrderBookWeb.Endpoint,
-      # Start order book registry
-      {Registry, keys: :unique, name: Registry.BookRegistry}
       # Start a worker by calling: OrderBook.Worker.start_link(arg)
       # {OrderBook.Worker, arg}
     ]

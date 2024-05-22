@@ -20,7 +20,7 @@ defmodule OrderBook.BookServer do
     GenServer.call(via(name), :status)
   end
 
-  defp via(name), do: {:via, Registry, {Registry.BookRegistry, name}}
+  defp via(name), do: String.to_atom(name)
 
   @impl true
   def init(initial_state) do
