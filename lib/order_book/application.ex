@@ -18,6 +18,7 @@ defmodule OrderBook.Application do
       OrderBookWeb.Endpoint,
       # Start a worker by calling: OrderBook.Worker.start_link(arg)
       # {OrderBook.Worker, arg}
+      {DynamicSupervisor, name: OrderBook.BookSupervisor, strategy: :one_for_one}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

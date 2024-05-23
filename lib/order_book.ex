@@ -33,7 +33,7 @@ defmodule OrderBook do
   def find_or_create_book(name) do
     case (name |> String.to_atom() |> Process.whereis()) do
       nil ->
-        BookServer.start_link(name)
+        DynamicSupervisor.start_child(OrderBook.BookSupervisor, {BookServer, name})
         BookServer.status(name)
 
       _ ->
